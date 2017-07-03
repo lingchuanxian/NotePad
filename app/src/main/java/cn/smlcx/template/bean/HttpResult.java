@@ -32,4 +32,12 @@ public class HttpResult<T> {
 		this.result = result;
 	}
 
+	public HttpResult(int code, String msg, T result) {
+		this.code = code;
+		this.msg = msg;
+		this.result = result;
+	}
+
+	public HttpResult() {
+	}
 }
