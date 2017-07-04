@@ -17,7 +17,7 @@ public class NotePadListModel implements BaseModel{
 
 	public Observable<PageBean<NotePad>> getNotePadList(int currentPage){
 		return ApiEngine.getInstance().getApiService().getNotePad(currentPage)
-				.compose(RxHelper.<PageBean<NotePad>>handleResult())
-				.retryWhen(new RetryWithDelay(3,1000));
+				.retryWhen(new RetryWithDelay(3,1000))
+				.compose(RxHelper.<PageBean<NotePad>>handleResult());
 	}
 }

@@ -3,5 +3,9 @@
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools">
 
-
+    <item android:id="@+id/exit"
+          android:title="退出"
+          android:icon="@mipmap/ans"
+          android:orderInCategory="90"
+          app:showAsAction="ifRoom" />
 </menu>

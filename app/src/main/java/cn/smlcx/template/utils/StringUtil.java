@@ -3,6 +3,7 @@ package cn.smlcx.template.utils;
 import java.io.File;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -93,4 +94,9 @@ public class StringUtil {
     {
        return new String(str.getBytes("ISO-8859-1"),"UTF-8");
     }
+
+    public static Date longToDate(long str){
+		Date date = new Date(str);
+		return date;
+	}
 }

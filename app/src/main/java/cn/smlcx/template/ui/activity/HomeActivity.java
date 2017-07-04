@@ -1,6 +1,7 @@
 package cn.smlcx.template.ui.activity;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
@@ -21,6 +22,7 @@ import butterknife.BindView;
 import cn.smlcx.template.R;
 import cn.smlcx.template.base.BaseActivity;
 import cn.smlcx.template.bean.News;
+import cn.smlcx.template.bean.NotePad;
 import cn.smlcx.template.di.component.DaggerNotePadComponent;
 import cn.smlcx.template.di.module.NotePadModule;
 import cn.smlcx.template.global.TemplateApplication;
@@ -57,7 +59,7 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 					@Override
 					public boolean onMenuItemClick(MenuItem item) {
 						switch (item.getItemId()) {
-							case R.id.action_add:
+							case R.id.exit:
 								new MaterialDialog.Builder(mContext)
 										.title("退出")
 										.content("您确定要退出吗？")
@@ -88,9 +90,10 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-				Intent intent = new Intent(HomeActivity.this,NewsDetailActivity.class);
-				intent.putExtra("url",mDatas.get(position).getUrl());
-				intent.putExtra("title",mDatas.get(position).getTitle());
+				Intent intent = new Intent(HomeActivity.this,NotePadEditActivity.class);
+				Bundle bundle = new Bundle();
+				bundle.putSerializable("note",(NotePad)adapter.getItem(position));
+				intent.putExtras(bundle);
 				startActivity(intent);
 			}
 		});
@@ -145,7 +148,7 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		}else if(flag == 1){//加载更多
 			mAdapter.loadMoreComplete();
 		}
-		mAdapter.addData((List<News>)list);
+		mAdapter.addData((List<NotePad>)list);
 	}
 
 	@Override
