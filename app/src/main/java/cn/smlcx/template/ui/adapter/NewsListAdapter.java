@@ -23,7 +23,7 @@ public class NewsListAdapter extends BaseQuickAdapter<NotePad,BaseViewHolder> {
 
 	@Override
 	protected void convert(BaseViewHolder helper, NotePad item) {
-		SimpleDateFormat sdf = new SimpleDateFormat("mm-dd hh:MM");
+		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
 		helper.setText(R.id.tv_title,item.getNpTitle())
 		.setText(R.id.tv_content,item.getNpContent())
 		.setText(R.id.tv_updatedate, sdf.format(StringUtil.longToDate(item.getNpUpdatedate())));

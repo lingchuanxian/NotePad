@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -58,7 +59,13 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 						}
 						return false;
 					}
-				});
+				})
+		.setNavigationOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				confirmFinish();
+			}
+		});
 
 		if (note.getNpContent().equals("")) {
 			mEditor.setPlaceholder("请输入内容");

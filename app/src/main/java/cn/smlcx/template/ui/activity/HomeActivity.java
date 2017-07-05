@@ -163,6 +163,15 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		return true;
 	}
 
+	@Override
+	protected void onResume() {
+		super.onResume();
+		mSwiperefresh.setRefreshing(true);
+		flag = 0;
+		mCurrentPage = 1;
+		mPresenter.getNotePadList(mCurrentPage, false);
+	}
+
 	/* 按返回键后台运行程序 */
 	@Override
 	public void onBackPressed() {
