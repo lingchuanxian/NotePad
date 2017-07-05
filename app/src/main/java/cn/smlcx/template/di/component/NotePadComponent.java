@@ -1,5 +1,6 @@
 package cn.smlcx.template.di.component;
 
+import cn.smlcx.template.di.module.GetLastVersionModule;
 import cn.smlcx.template.di.module.NotePadModule;
 import cn.smlcx.template.ui.activity.HomeActivity;
 import dagger.Component;
@@ -7,7 +8,7 @@ import dagger.Component;
 /**
  * Created by lcx on 6/6/17.
  */
-@Component(modules = NotePadModule.class)
+@Component(modules = {NotePadModule.class, GetLastVersionModule.class})
 public interface NotePadComponent {
     void inject(HomeActivity activity);
 }

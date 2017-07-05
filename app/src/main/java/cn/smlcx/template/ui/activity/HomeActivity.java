@@ -21,9 +21,11 @@ import java.util.List;
 import butterknife.BindView;
 import cn.smlcx.template.R;
 import cn.smlcx.template.base.BaseActivity;
+import cn.smlcx.template.bean.AppVersion;
 import cn.smlcx.template.bean.News;
 import cn.smlcx.template.bean.NotePad;
 import cn.smlcx.template.di.component.DaggerNotePadComponent;
+import cn.smlcx.template.di.module.GetLastVersionModule;
 import cn.smlcx.template.di.module.NotePadModule;
 import cn.smlcx.template.global.TemplateApplication;
 import cn.smlcx.template.mvp.presenter.NotePadListPresenter;
@@ -34,7 +36,7 @@ import cn.smlcx.template.ui.adapter.NewsListAdapter;
  * Created by lcx on 2017/6/5.
  */
 
-public class HomeActivity extends BaseActivity<NotePadListPresenter> implements ViewContract.NotePadListView{
+public class HomeActivity extends BaseActivity<NotePadListPresenter> implements ViewContract.NotePadListView,ViewContract.GetLaseVersionView{
 	protected final String TAG = this.getClass().getSimpleName();
 	@BindView(R.id.rlv_news)
 	RecyclerView mRlvNews;
@@ -124,6 +126,7 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 	protected void initInject() {
 		DaggerNotePadComponent.builder()
 				.notePadModule(new NotePadModule(this))
+				.getLastVersionModule(new GetLastVersionModule(this))
 				.build()
 				.inject(this);
 	}
@@ -149,6 +152,11 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 			mAdapter.loadMoreComplete();
 		}
 		mAdapter.addData((List<NotePad>)list);
+	}
+
+	@Override
+	public void success(AppVersion appVersion) {
+		Log.e(TAG, "success: "+appVersion.toString() );
 	}
 
 	@Override

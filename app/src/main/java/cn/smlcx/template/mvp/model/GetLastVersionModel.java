@@ -14,7 +14,7 @@ import rx.Observable;
 @ActivityScope
 public class GetLastVersionModel implements BaseModel{
 
-	public Observable<AppVersion> getNotePadList(int currentPage){
+	public Observable<AppVersion> getLastVersion(){
 		return ApiEngine.getInstance().getApiService().getLastVersion()
 				.retryWhen(new RetryWithDelay(3,1000))
 				.compose(RxHelper.<AppVersion>handleResult());

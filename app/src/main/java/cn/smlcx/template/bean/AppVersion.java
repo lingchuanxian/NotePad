@@ -64,4 +64,15 @@ public class AppVersion implements Serializable{
 
 	public AppVersion() {
 	}
+
+	@Override
+	public String toString() {
+		return "AppVersion{" +
+				"avId=" + avId +
+				", avCode='" + avCode + '\'' +
+				", avForceUpdate=" + avForceUpdate +
+				", avUrl='" + avUrl + '\'' +
+				", avPushDate=" + avPushDate +
+				'}';
+	}
 }
