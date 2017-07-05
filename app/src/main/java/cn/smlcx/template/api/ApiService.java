@@ -3,8 +3,10 @@ package cn.smlcx.template.api;
 import cn.smlcx.template.bean.HttpResult;
 import cn.smlcx.template.bean.NotePad;
 import cn.smlcx.template.bean.PageBean;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 import rx.Observable;
 
@@ -16,5 +18,9 @@ public interface ApiService {
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	@GET("notepad/getNotePad.shtml")
 	Observable<HttpResult<PageBean<NotePad>>> getNotePad(@Query("currentPage") int currentPage);
+
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+	@POST("notepad/updateNotePad.shtml")
+	Observable<HttpResult> updateNotePad(@Body String data);
 
 }

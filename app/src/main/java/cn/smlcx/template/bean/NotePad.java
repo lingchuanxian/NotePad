@@ -71,6 +71,12 @@ public class NotePad implements Serializable {
         this.npState = npState;
     }
 
+    public NotePad(int npId, String npTitle, String npContent) {
+        this.npId = npId;
+        this.npTitle = npTitle;
+        this.npContent = npContent;
+    }
+
     public NotePad() {
     }
 }

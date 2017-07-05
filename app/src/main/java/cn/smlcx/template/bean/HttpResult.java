@@ -40,4 +40,13 @@ public class HttpResult<T> {
 
 	public HttpResult() {
 	}
+
+	@Override
+	public String toString() {
+		return "HttpResult{" +
+				"code=" + code +
+				", msg='" + msg + '\'' +
+				", result=" + result +
+				'}';
+	}
 }

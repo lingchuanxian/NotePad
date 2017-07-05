@@ -17,4 +17,8 @@ public interface ViewContract {
 		void success(int totlaPage,List<?> list);
 		void fail(String msg);
 	}
+	interface UpdateNotePadView extends BaseView {
+		void success();
+		void fail(String msg);
+	}
 }
