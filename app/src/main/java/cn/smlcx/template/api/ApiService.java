@@ -1,5 +1,6 @@
 package cn.smlcx.template.api;
 
+import cn.smlcx.template.bean.AppVersion;
 import cn.smlcx.template.bean.HttpResult;
 import cn.smlcx.template.bean.NotePad;
 import cn.smlcx.template.bean.PageBean;
@@ -22,5 +23,9 @@ public interface ApiService {
 	@Headers({"Content-Type: application/json","Accept: application/json"})
 	@POST("notepad/updateNotePad.shtml")
 	Observable<HttpResult> updateNotePad(@Body String data);
+
+	@Headers({"Content-Type: application/json","Accept: application/json"})
+	@POST("appversion/getLastVersion.shtml")
+	Observable<HttpResult<AppVersion>> getLastVersion();
 
 }

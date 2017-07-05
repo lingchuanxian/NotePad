@@ -11,6 +11,7 @@ public class AppVersion implements Serializable{
 	private int avId;
 	private String avCode;
 	private int avForceUpdate;//0否1是
+	private String avUrl;
 	private Date avPushDate;
 
 	public int getAvId() {
@@ -37,6 +38,14 @@ public class AppVersion implements Serializable{
 		this.avForceUpdate = avForceUpdate;
 	}
 
+	public String getAvUrl() {
+		return avUrl;
+	}
+
+	public void setAvUrl(String avUrl) {
+		this.avUrl = avUrl;
+	}
+
 	public Date getAvPushDate() {
 		return avPushDate;
 	}
@@ -45,10 +54,11 @@ public class AppVersion implements Serializable{
 		this.avPushDate = avPushDate;
 	}
 
-	public AppVersion(int avId, String avCode, int avForceUpdate, Date avPushDate) {
+	public AppVersion(int avId, String avCode,String avUrl, int avForceUpdate, Date avPushDate) {
 		this.avId = avId;
 		this.avCode = avCode;
 		this.avForceUpdate = avForceUpdate;
+		this.avUrl = avUrl;
 		this.avPushDate = avPushDate;
 	}
 
