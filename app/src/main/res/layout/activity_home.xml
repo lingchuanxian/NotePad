@@ -31,7 +31,7 @@
         android:src="@mipmap/add"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/y18"
+        android:layout_marginBottom="@dimen/y22"
         android:layout_marginRight="@dimen/x25"
         android:clickable="true"
         android:onClick="onClick"/>
