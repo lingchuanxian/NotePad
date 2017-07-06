@@ -18,25 +18,31 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import cn.smlcx.template.R;
 import cn.smlcx.template.base.BaseActivity;
 import cn.smlcx.template.bean.AppVersion;
 import cn.smlcx.template.bean.News;
 import cn.smlcx.template.bean.NotePad;
-import cn.smlcx.template.di.component.DaggerNotePadComponent;
+import cn.smlcx.template.di.component.DaggerHomeComponent;
+import cn.smlcx.template.di.module.DeleteNotePadModule;
 import cn.smlcx.template.di.module.GetLastVersionModule;
 import cn.smlcx.template.di.module.NotePadModule;
 import cn.smlcx.template.global.TemplateApplication;
+import cn.smlcx.template.mvp.presenter.DeleteNotePadPresenter;
+import cn.smlcx.template.mvp.presenter.GetLastVersionPresenter;
 import cn.smlcx.template.mvp.presenter.NotePadListPresenter;
 import cn.smlcx.template.mvp.view.ViewContract;
 import cn.smlcx.template.ui.adapter.NewsListAdapter;
+import cn.smlcx.template.utils.AppUtil;
 
 /**
  * Created by lcx on 2017/6/5.
  */
 
-public class HomeActivity extends BaseActivity<NotePadListPresenter> implements ViewContract.NotePadListView,ViewContract.GetLaseVersionView{
+public class HomeActivity extends BaseActivity<NotePadListPresenter> implements ViewContract.NotePadListView, ViewContract.GetLaseVersionView,ViewContract.DeleteNotePadView,View.OnClickListener {
 	protected final String TAG = this.getClass().getSimpleName();
 	@BindView(R.id.rlv_news)
 	RecyclerView mRlvNews;
@@ -47,6 +53,12 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 	private int mCurrentPage = 1;//当前页码
 	private int mTotalPage;//总页码
 	private int flag = 0;//0 -- 第一次加载或者刷新  1 -- 加载更多
+	String currentVersion;
+	@Inject
+	GetLastVersionPresenter mGetLastVersionPresenter;
+	@Inject
+	DeleteNotePadPresenter mDeleteNotePadPresenter;
+
 	@Override
 	protected int attachLayoutRes() {
 		return R.layout.activity_home;
@@ -92,9 +104,9 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
 			@Override
 			public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-				Intent intent = new Intent(HomeActivity.this,NotePadEditActivity.class);
+				Intent intent = new Intent(HomeActivity.this, NotePadEditActivity.class);
 				Bundle bundle = new Bundle();
-				bundle.putSerializable("note",(NotePad)adapter.getItem(position));
+				bundle.putSerializable("note", (NotePad) adapter.getItem(position));
 				intent.putExtras(bundle);
 				startActivity(intent);
 			}
@@ -110,23 +122,55 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		});
 		/* 加载更多 */
 		mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-			@Override public void onLoadMoreRequested() {
+			@Override
+			public void onLoadMoreRequested() {
 				if (mCurrentPage >= mTotalPage) {//数据全部加载完毕
 					mAdapter.loadMoreEnd();
 				} else {//数据未加载完，继续请求加载
 					flag = 1;
 					mCurrentPage += 1;
-					mPresenter.getNotePadList(mCurrentPage,false);
+					mPresenter.getNotePadList(mCurrentPage, false);
 				}
 			}
 		});
+
+		mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+			@Override
+			public boolean onItemLongClick(BaseQuickAdapter adapter, View view, final int position) {
+				final int npId = ((NotePad) adapter.getItem(position)).getNpId();
+				new MaterialDialog.Builder(mContext)
+						.title("删除")
+						.content("您确定要删除该记录吗？")
+						.positiveText("确定")
+						.onPositive(new MaterialDialog.SingleButtonCallback() {
+							@Override
+							public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+								mDeleteNotePadPresenter.deleteNotePad(npId);
+								mAdapter.remove(position);
+							}
+						})
+						.negativeText("取消")
+						.onNegative(new MaterialDialog.SingleButtonCallback() {
+							@Override
+							public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+								dialog.dismiss();
+							}
+						})
+						.cancelable(false)
+						.show();
+				return false;
+			}
+		});
+
+		currentVersion = AppUtil.getAppVersionName(mContext);
 	}
 
 	@Override
 	protected void initInject() {
-		DaggerNotePadComponent.builder()
+		DaggerHomeComponent.builder()
 				.notePadModule(new NotePadModule(this))
 				.getLastVersionModule(new GetLastVersionModule(this))
+				.deleteNotePadModule(new DeleteNotePadModule(this))
 				.build()
 				.inject(this);
 	}
@@ -134,29 +178,34 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 	@Override
 	protected void initData() {
 		mPresenter.getNotePadList(mCurrentPage, true);
+		mGetLastVersionPresenter.getLastVersion();
 	}
 
 	@Override
-	public void success(int totalPage,List<?> list) {
-		Log.e("result-size:",list.size()+"");
-		//获取页码
+	public void success(int totalPage, List<?> list) {
 		mTotalPage = totalPage;
-		if(flag == 0){//第一次加载或者刷新
+		if (flag == 0) {//第一次加载或者刷新
 			mDatas.clear();
-			if(list.size() == 0){
+			if (list.size() == 0) {
 				showNonData("当前暂无数据。");
 				return;
 			}
 			mSwiperefresh.setRefreshing(false);
-		}else if(flag == 1){//加载更多
+			mRlvNews.scrollToPosition(0);
+		} else if (flag == 1) {//加载更多
 			mAdapter.loadMoreComplete();
 		}
-		mAdapter.addData((List<NotePad>)list);
+		mAdapter.addData((List<NotePad>) list);
 	}
 
 	@Override
-	public void success(AppVersion appVersion) {
-		Log.e(TAG, "success: "+appVersion.toString() );
+	public void GetLaseVersionsuccess(AppVersion appVersion) {
+		Log.d("AppVersion:", appVersion.toString());
+	}
+
+	@Override
+	public void GetLaseVersionfail(String msg) {
+
 	}
 
 	@Override
@@ -164,17 +213,29 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		showErr(msg);
 	}
 
-	/** 创建菜单 */
+
+	@Override
+	public void DeleteNotePadSuccess() {
+		Log.e(TAG, "DeleteNotePadSuccess: 删除成功");
+	}
+
+	@Override
+	public void DeleteNotePadFail(String msg) {
+		Log.e(TAG, "DeleteNotePadSuccess: 删除失败");
+	}
+
+	/**
+	 * 创建菜单
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		getMenuInflater().inflate(R.menu.menu_main,menu);
+		getMenuInflater().inflate(R.menu.menu_main, menu);
 		return true;
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mSwiperefresh.setRefreshing(true);
 		flag = 0;
 		mCurrentPage = 1;
 		mPresenter.getNotePadList(mCurrentPage, false);
@@ -188,4 +249,14 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		intent.addCategory(Intent.CATEGORY_HOME);
 		startActivity(intent);
 	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()){
+			case R.id.iv_add:
+				startActivity(NotePadEditActivity.class);
+				break;
+		}
+	}
+
 }

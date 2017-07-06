@@ -25,4 +25,15 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
+    <ImageView android:id="@+id/iv_add"
+        android:layout_width="@dimen/x38"
+        android:layout_height="@dimen/x38"
+        android:src="@mipmap/add"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/y18"
+        android:layout_marginRight="@dimen/x25"
+        android:clickable="true"
+        android:onClick="onClick"/>
+
 </RelativeLayout>

@@ -5,6 +5,6 @@ package cn.smlcx.template.global;
  */
 
 public class Contants {
-	//public final static String IP = "http://192.168.3.27:8080/";
-	public final static String IP = "http://192.168.0.101:8080/";
+	public final static String IP = "http://192.168.3.27:8080/";
+	//public final static String IP = "http://192.168.0.101:8080/";
 }

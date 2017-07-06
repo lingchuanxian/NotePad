@@ -39,12 +39,12 @@ public class GetLastVersionPresenter extends BasePresenter<GetLastVersionModel,V
 
 					@Override
 					public void onError(Throwable e) {
-						mView.fail(e.getMessage());
+						mView.GetLaseVersionfail(e.getMessage());
 					}
 
 					@Override
 					public void onNext(AppVersion result) {
-						mView.success(result);
+						mView.GetLaseVersionsuccess(result);
 					}
 				});
 		addSubscribe(subscribe);

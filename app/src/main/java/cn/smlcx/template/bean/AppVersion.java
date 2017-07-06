@@ -1,7 +1,6 @@
 package cn.smlcx.template.bean;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * Created by lcx on 2017/7/3.
@@ -12,7 +11,7 @@ public class AppVersion implements Serializable{
 	private String avCode;
 	private int avForceUpdate;//0否1是
 	private String avUrl;
-	private Date avPushDate;
+	private long avPushDate;
 
 	public int getAvId() {
 		return avId;
@@ -46,15 +45,15 @@ public class AppVersion implements Serializable{
 		this.avUrl = avUrl;
 	}
 
-	public Date getAvPushDate() {
+	public long getAvPushDate() {
 		return avPushDate;
 	}
 
-	public void setAvPushDate(Date avPushDate) {
+	public void setAvPushDate(long avPushDate) {
 		this.avPushDate = avPushDate;
 	}
 
-	public AppVersion(int avId, String avCode,String avUrl, int avForceUpdate, Date avPushDate) {
+	public AppVersion(int avId, String avCode,String avUrl, int avForceUpdate, long avPushDate) {
 		this.avId = avId;
 		this.avCode = avCode;
 		this.avForceUpdate = avForceUpdate;

@@ -23,7 +23,11 @@ public interface ViewContract {
 		void fail(String msg);
 	}
 	interface GetLaseVersionView extends BaseView {
-		void success(AppVersion appVersion);
-		void fail(String msg);
+		void GetLaseVersionsuccess(AppVersion appVersion);
+		void GetLaseVersionfail(String msg);
+	}
+	interface DeleteNotePadView extends BaseView {
+		void DeleteNotePadSuccess();
+		void DeleteNotePadFail(String msg);
 	}
 }

@@ -19,7 +19,9 @@
         </activity>
         <activity android:name=".ui.activity.IntroActivity"/>
         <activity android:name=".ui.activity.HomeActivity"/>
-        <activity android:name=".ui.activity.NotePadEditActivity"/>
+        <activity android:name=".ui.activity.NotePadEditActivity"
+                  android:windowSoftInputMode="adjustResize|stateHidden"
+                  android:screenOrientation="portrait"  />
     </application>
 
 </manifest>
