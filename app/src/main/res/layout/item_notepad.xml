@@ -4,7 +4,7 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="@dimen/y80"
-              android:background="#f5f5f5"
+              android:background="#ffffff"
               android:orientation="vertical">
 
     <android.support.v7.widget.CardView
@@ -14,7 +14,7 @@
         android:layout_height="match_parent"
         android:clickable="false"
         android:foreground="?android:attr/selectableItemBackground"
-        app:cardBackgroundColor="#ffffff"
+        app:cardBackgroundColor="#f5f5f5"
         app:cardCornerRadius="2dp"
         app:cardMaxElevation="3dp"
         app:cardElevation="2dp"
@@ -27,26 +27,28 @@
         android:paddingLeft="@dimen/x6"
         android:paddingRight="@dimen/x6">
 
-        <RelativeLayout android:id="@+id/rl_top"
+        <LinearLayout android:id="@+id/rl_top"
                         android:layout_width="match_parent"
                         android:layout_height="@dimen/y31">
 
             <TextView android:id="@+id/tv_title"
-                      android:layout_width="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="0.8"
                       android:layout_height="match_parent"
                       android:layout_alignParentLeft="true"
                       android:textSize="18sp"
                       android:gravity="center_vertical"
                       android:textStyle="bold"
-                      android:singleLine="true"/>
+                      android:singleLine="true"
+                      android:ellipsize="end"/>
 
             <TextView android:id="@+id/tv_updatedate"
-                      android:layout_gravity="right"
                       android:layout_alignParentRight="true"
-                      android:layout_width="wrap_content"
+                      android:layout_width="0dp"
+                      android:layout_weight="0.2"
                       android:layout_height="match_parent"
-                      android:gravity="center_vertical"/>
-        </RelativeLayout>
+                      android:gravity="center_vertical|right"/>
+        </LinearLayout>
 
 
         <TextView android:id="@+id/tv_content"

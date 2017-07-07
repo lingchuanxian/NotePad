@@ -16,8 +16,8 @@ import cn.smlcx.template.utils.StringUtil;
  * Created by lcx on 2017/6/8.
  */
 
-public class NewsListAdapter extends BaseQuickAdapter<NotePad,BaseViewHolder> {
-	public NewsListAdapter(@Nullable List data) {
+public class NotePadListAdapter extends BaseQuickAdapter<NotePad,BaseViewHolder> {
+	public NotePadListAdapter(@Nullable List data) {
 		super(R.layout.item_notepad, data);
 	}
 

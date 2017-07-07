@@ -44,20 +44,20 @@ public class SplashActivity extends AppCompatActivity {
 	protected void initData() {
 		// 如果是第一次启动，则先进入功能引导页
 		new Handler().postDelayed(new Runnable() {
-			@Override
-			public void run() {
-				boolean isFirstOpen = SPUtils.getValue(SplashActivity.this,"global","isFirstOpen",true);
-				Intent intent;
-				if (isFirstOpen) {
-					intent = new Intent(SplashActivity.this,IntroActivity.class);
-					SPUtils.putValue(SplashActivity.this,"global","isFirstOpen",false);
-				}else{
-					intent = new Intent(SplashActivity.this,HomeActivity.class);
-				}
-				startActivity(intent);
-				finish();
+		@Override
+		public void run() {
+			boolean isFirstOpen = SPUtils.getValue(SplashActivity.this,"global","isFirstOpen",true);
+			Intent intent;
+			if (isFirstOpen) {
+				intent = new Intent(SplashActivity.this,IntroActivity.class);
+				SPUtils.putValue(SplashActivity.this,"global","isFirstOpen",false);
+			}else{
+				intent = new Intent(SplashActivity.this,HomeActivity.class);
 			}
-		}, 3000);
+			startActivity(intent);
+			finish();
+		}
+	}, 3000);
 
-	}
+}
 }

@@ -8,6 +8,8 @@ import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
 import com.afollestad.materialdialogs.DialogAction;
@@ -23,7 +25,6 @@ import cn.smlcx.template.di.component.DaggerUpdateNotePadComponent;
 import cn.smlcx.template.di.module.UpdateNotePadModule;
 import cn.smlcx.template.mvp.presenter.UpdateNotePadPresenter;
 import cn.smlcx.template.mvp.view.ViewContract;
-import cn.smlcx.template.widget.KeyboardListenRelativeLayout;
 import jp.wasabeef.richeditor.RichEditor;
 
 /**
@@ -36,15 +37,13 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 	RichEditor mEditor;
 	@BindView(R.id.et_title)
 	EditText mEtTitle;
-	@BindView(R.id.mainlayout)
-	KeyboardListenRelativeLayout mMainlayout;
 	private int isChange = 0;
 	private int actionSave = 0;
-	private int isFirst = 1;
 	private NotePad note;
 	private int flag = 0;//1  add  2  edit
 	Gson gson = new Gson();
 	private MaterialDialog progressDialog;
+	private InputMethodManager imm;
 
 	@Override
 	protected int attachLayoutRes() {
@@ -53,7 +52,8 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 
 	@Override
 	protected void initViews() {
-		mEditor.setEditorFontSize(16);
+		getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+		mEditor.setEditorFontSize(17);
 		Bundle bundle = getIntent().getExtras();
 		if (bundle != null) {
 			note = (NotePad) getIntent().getExtras().getSerializable("note");
@@ -61,14 +61,18 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 			if (note.getNpContent().equals("")) {
 				mEditor.setPlaceholder("请输入内容");
 			} else {
-				mEditor.setHtml(note.getNpContent());
+				mEditor.setOnInitialLoadListener(new RichEditor.AfterInitialLoadListener() {
+					@Override
+					public void onAfterInitialLoad(boolean isReady) {
+						mEditor.setHtml(note.getNpContent());
+					}
+				});
 			}
 			if (!note.getNpTitle().equals("")) {
 				mEtTitle.setText(note.getNpTitle());
 			}
 		} else {//新增
 			flag = 1;
-			mEditor.setHtml("");
 			mEtTitle.setHint("请输入标题");
 			mEditor.setPlaceholder("请输入内容");
 		}
@@ -76,13 +80,10 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 		mEditor.setOnTextChangeListener(new RichEditor.OnTextChangeListener() {
 			@Override
 			public void onTextChange(String text) {
-				if (isFirst != 1) {
 					isChange = 1;
-				} else {
-					isFirst = 0;
-				}
 			}
 		});
+		mEditor.setKeepScreenOn(true);
 		getToolBar().setTitle("编辑")
 				.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
 					@Override
@@ -110,26 +111,6 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 				.progress(true, 0)
 				.cancelable(false)
 				.build();
-
-
-		mMainlayout.setOnKeyboardStateChangedListener(new KeyboardListenRelativeLayout.IOnKeyboardStateChangedListener() {
-			@Override
-			public void onKeyboardStateChanged(int state) {
-				switch (state) {
-					case KeyboardListenRelativeLayout.KEYBOARD_STATE_HIDE:
-						showToast("显示1");
-						break;
-					case KeyboardListenRelativeLayout.KEYBOARD_STATE_INIT:
-						showToast("显示2");
-						break;
-					case KeyboardListenRelativeLayout.KEYBOARD_STATE_SHOW:
-						showToast("显示3");
-						break;
-					default:
-						break;
-				}
-			}
-		});
 	}
 
 	@Override

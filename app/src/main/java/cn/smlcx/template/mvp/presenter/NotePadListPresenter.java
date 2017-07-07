@@ -37,7 +37,6 @@ public class NotePadListPresenter extends BasePresenter<NotePadListModel,ViewCon
 				.subscribe(new Subscriber<PageBean<NotePad>>() {
 					@Override
 					public void onCompleted() {
-						mView.hideLoding();
 					}
 
 					@Override

@@ -24,7 +24,6 @@ import butterknife.BindView;
 import cn.smlcx.template.R;
 import cn.smlcx.template.base.BaseActivity;
 import cn.smlcx.template.bean.AppVersion;
-import cn.smlcx.template.bean.News;
 import cn.smlcx.template.bean.NotePad;
 import cn.smlcx.template.di.component.DaggerHomeComponent;
 import cn.smlcx.template.di.module.DeleteNotePadModule;
@@ -35,7 +34,7 @@ import cn.smlcx.template.mvp.presenter.DeleteNotePadPresenter;
 import cn.smlcx.template.mvp.presenter.GetLastVersionPresenter;
 import cn.smlcx.template.mvp.presenter.NotePadListPresenter;
 import cn.smlcx.template.mvp.view.ViewContract;
-import cn.smlcx.template.ui.adapter.NewsListAdapter;
+import cn.smlcx.template.ui.adapter.NotePadListAdapter;
 import cn.smlcx.template.utils.AppUtil;
 
 /**
@@ -48,8 +47,8 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 	RecyclerView mRlvNews;
 	@BindView(R.id.swiperefresh)
 	SwipeRefreshLayout mSwiperefresh;
-	private NewsListAdapter mAdapter;
-	private List<News> mDatas = new ArrayList<News>();
+	private NotePadListAdapter mAdapter;
+	private List<NotePad> mDatas = new ArrayList<NotePad>();
 	private int mCurrentPage = 1;//当前页码
 	private int mTotalPage;//总页码
 	private int flag = 0;//0 -- 第一次加载或者刷新  1 -- 加载更多
@@ -67,7 +66,7 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 	@Override
 	protected void initViews() {
 		/* 设置toolBar */
-		getToolBar().setTitle("微信精选")
+		getToolBar().setTitle("Loving Fang")
 				.setDisplayHomeAsUpEnabled(false)
 				.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
 					@Override
@@ -98,8 +97,9 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 						return false;
 					}
 				});
-		mAdapter = new NewsListAdapter(mDatas);
+		mAdapter = new NotePadListAdapter(mDatas);
 		mRlvNews.setAdapter(mAdapter);
+		mAdapter.openLoadAnimation();
 		/* item点击事件 */
 		mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
 			@Override
@@ -124,13 +124,18 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
 			@Override
 			public void onLoadMoreRequested() {
-				if (mCurrentPage >= mTotalPage) {//数据全部加载完毕
-					mAdapter.loadMoreEnd();
-				} else {//数据未加载完，继续请求加载
-					flag = 1;
-					mCurrentPage += 1;
-					mPresenter.getNotePadList(mCurrentPage, false);
-				}
+				mRlvNews.postDelayed(new Runnable() {
+					@Override
+					public void run() {
+						if (mCurrentPage >= mTotalPage) {//数据全部加载完毕
+							mAdapter.loadMoreEnd();
+						} else {//数据未加载完，继续请求加载
+							flag = 1;
+							mCurrentPage += 1;
+							mPresenter.getNotePadList(mCurrentPage, false);
+						}
+					}
+				}, 1000);
 			}
 		});
 
@@ -188,7 +193,6 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 			mDatas.clear();
 			if (list.size() == 0) {
 				showNonData("当前暂无数据。");
-				return;
 			}
 			mSwiperefresh.setRefreshing(false);
 			mRlvNews.scrollToPosition(0);
