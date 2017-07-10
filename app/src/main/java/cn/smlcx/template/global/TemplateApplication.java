@@ -54,4 +54,10 @@ public class TemplateApplication extends Application {
 				.appModule(new AppModule(this))
 				.build();
 	}
+
+	@Override
+	public void onTerminate() {
+		super.onTerminate();
+		instance = null;
+	}
 }

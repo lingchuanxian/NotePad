@@ -10,7 +10,6 @@ import cn.smlcx.template.mvp.model.NotePadListModel;
 import cn.smlcx.template.mvp.view.ViewContract;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.functions.Action0;
 
 /**
  * Created by lcx on 2017/6/6.
@@ -24,16 +23,8 @@ public class NotePadListPresenter extends BasePresenter<NotePadListModel,ViewCon
 		this.mView = view;
 	}
 
-	public void getNotePadList(int currentPage, final boolean isFirst) {
+	public void getNotePadList(int currentPage) {
 		subscribe = mModel.getNotePadList(currentPage)
-				.doOnSubscribe(new Action0() {
-					@Override
-					public void call() {
-						if(isFirst){
-							mView.showLoding();
-						}
-					}
-				})
 				.subscribe(new Subscriber<PageBean<NotePad>>() {
 					@Override
 					public void onCompleted() {

@@ -98,8 +98,9 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 					}
 				});
 		mAdapter = new NotePadListAdapter(mDatas);
-		mRlvNews.setAdapter(mAdapter);
-		mAdapter.openLoadAnimation();
+		mAdapter.bindToRecyclerView(mRlvNews);
+		mAdapter.disableLoadMoreIfNotFullPage();
+		//mAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_BOTTOM);
 		/* item点击事件 */
 		mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
 			@Override
@@ -117,9 +118,11 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 			public void onRefresh() {
 				flag = 0;
 				mCurrentPage = 1;
-				mPresenter.getNotePadList(mCurrentPage, false);
+				mPresenter.getNotePadList(mCurrentPage);
 			}
 		});
+
+
 		/* 加载更多 */
 		mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
 			@Override
@@ -132,12 +135,12 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 						} else {//数据未加载完，继续请求加载
 							flag = 1;
 							mCurrentPage += 1;
-							mPresenter.getNotePadList(mCurrentPage, false);
+							mPresenter.getNotePadList(mCurrentPage);
 						}
 					}
 				}, 1000);
 			}
-		});
+		},mRlvNews);
 
 		mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
 			@Override
@@ -182,7 +185,8 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 
 	@Override
 	protected void initData() {
-		mPresenter.getNotePadList(mCurrentPage, true);
+		mSwiperefresh.setRefreshing(true);
+		mPresenter.getNotePadList(mCurrentPage);
 		mGetLastVersionPresenter.getLastVersion();
 	}
 
@@ -196,10 +200,11 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 			}
 			mSwiperefresh.setRefreshing(false);
 			mRlvNews.scrollToPosition(0);
+			mAdapter.setNewData((List<NotePad>)list);
 		} else if (flag == 1) {//加载更多
 			mAdapter.loadMoreComplete();
+			mAdapter.addData((List<NotePad>) list);
 		}
-		mAdapter.addData((List<NotePad>) list);
 	}
 
 	@Override
@@ -242,7 +247,7 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 		super.onResume();
 		flag = 0;
 		mCurrentPage = 1;
-		mPresenter.getNotePadList(mCurrentPage, false);
+		mPresenter.getNotePadList(mCurrentPage);
 	}
 
 	/* 按返回键后台运行程序 */
