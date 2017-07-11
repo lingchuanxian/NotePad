@@ -1,6 +1,8 @@
 package cn.smlcx.template.ui.adapter;
 
 import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.View;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -25,7 +27,13 @@ public class NotePadListAdapter extends BaseQuickAdapter<NotePad,BaseViewHolder>
 	protected void convert(BaseViewHolder helper, NotePad item) {
 		SimpleDateFormat sdf = new SimpleDateFormat("MM-dd hh:mm");
 		helper.setText(R.id.tv_title,item.getNpTitle())
-		.setText(R.id.tv_content,item.getNpContent())
-		.setText(R.id.tv_updatedate, sdf.format(StringUtil.longToDate(item.getNpUpdatedate())));
+				.setText(R.id.tv_content,item.getNpContent())
+				.setText(R.id.tv_updatedate, sdf.format(StringUtil.longToDate(item.getNpUpdatedate())))
+				.getView(R.id.tv_del).setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				Log.e(TAG, "onClick: del" );
+			}
+		});
 	}
 }

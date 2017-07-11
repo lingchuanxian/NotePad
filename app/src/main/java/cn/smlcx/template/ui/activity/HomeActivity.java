@@ -142,31 +142,34 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 			}
 		},mRlvNews);
 
-		mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+		mAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
 			@Override
-			public boolean onItemLongClick(BaseQuickAdapter adapter, View view, final int position) {
+			public void onItemChildClick(BaseQuickAdapter adapter, View view,final int position) {
 				final int npId = ((NotePad) adapter.getItem(position)).getNpId();
-				new MaterialDialog.Builder(mContext)
-						.title("删除")
-						.content("您确定要删除该记录吗？")
-						.positiveText("确定")
-						.onPositive(new MaterialDialog.SingleButtonCallback() {
-							@Override
-							public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-								mDeleteNotePadPresenter.deleteNotePad(npId);
-								mAdapter.remove(position);
-							}
-						})
-						.negativeText("取消")
-						.onNegative(new MaterialDialog.SingleButtonCallback() {
-							@Override
-							public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-								dialog.dismiss();
-							}
-						})
-						.cancelable(false)
-						.show();
-				return false;
+				switch (view.getId()){
+					case R.id.tv_del:
+						new MaterialDialog.Builder(mContext)
+								.title("删除")
+								.content("您确定要删除该记录吗？")
+								.positiveText("确定")
+								.onPositive(new MaterialDialog.SingleButtonCallback() {
+									@Override
+									public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+										mDeleteNotePadPresenter.deleteNotePad(npId);
+										mAdapter.remove(position);
+									}
+								})
+								.negativeText("取消")
+								.onNegative(new MaterialDialog.SingleButtonCallback() {
+									@Override
+									public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+										dialog.dismiss();
+									}
+								})
+								.cancelable(false)
+								.show();
+						break;
+				}
 			}
 		});
 
@@ -267,5 +270,4 @@ public class HomeActivity extends BaseActivity<NotePadListPresenter> implements 
 				break;
 		}
 	}
-
 }

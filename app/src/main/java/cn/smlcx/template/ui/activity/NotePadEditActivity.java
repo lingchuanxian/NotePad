@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -25,6 +27,9 @@ import cn.smlcx.template.di.component.DaggerUpdateNotePadComponent;
 import cn.smlcx.template.di.module.UpdateNotePadModule;
 import cn.smlcx.template.mvp.presenter.UpdateNotePadPresenter;
 import cn.smlcx.template.mvp.view.ViewContract;
+import cn.smlcx.template.utils.SoftKeyboardStateHelper;
+import cn.smlcx.template.utils.ViewUtils;
+import cn.smlcx.template.widget.GradationScrollView;
 import jp.wasabeef.richeditor.RichEditor;
 
 /**
@@ -37,6 +42,14 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 	RichEditor mEditor;
 	@BindView(R.id.et_title)
 	EditText mEtTitle;
+	@BindView(R.id.sc_edit)
+	GradationScrollView mScEdit;
+	@BindView(R.id.tv_title_index)
+	TextView mTvTitleIndex;
+	@BindView(R.id.tv_content_index)
+	TextView mTvContentIndex;
+	@BindView(R.id.ll_edit_se)
+	LinearLayout mLlEditSe;
 	private int isChange = 0;
 	private int actionSave = 0;
 	private NotePad note;
@@ -80,7 +93,7 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 		mEditor.setOnTextChangeListener(new RichEditor.OnTextChangeListener() {
 			@Override
 			public void onTextChange(String text) {
-					isChange = 1;
+				isChange = 1;
 			}
 		});
 		mEditor.setKeepScreenOn(true);
@@ -111,10 +124,34 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 				.progress(true, 0)
 				.cancelable(false)
 				.build();
+
+		mScEdit.setScrollViewListener(new GradationScrollView.ScrollViewListener() {
+			@Override
+			public void onScrollChanged(GradationScrollView scrollView, int x, int y, int oldx, int oldy) {
+				if (y >= (mTvTitleIndex.getHeight() + mEtTitle.getHeight())) {
+					getToolBar().setTitle(mEtTitle.getText().toString());
+				} else {
+					getToolBar().setTitle("编辑");
+				}
+			}
+		});
 	}
 
 	@Override
 	protected void initData() {
+		SoftKeyboardStateHelper softKeyboardStateHelper = new SoftKeyboardStateHelper(findViewById(R.id.sc_edit));
+		softKeyboardStateHelper.addSoftKeyboardStateListener(new SoftKeyboardStateHelper.SoftKeyboardStateListener() {
+			@Override
+			public void onSoftKeyboardOpened(int keyboardHeightInPx) {
+				ViewUtils.setMargins(mScEdit, 0, 0, 0, keyboardHeightInPx);
+			}
+
+			@Override
+			public void onSoftKeyboardClosed() {
+				ViewUtils.setMargins(mScEdit, 0, 0, 0, 0);
+			}
+		});
+
 	}
 
 	@Override
@@ -139,6 +176,7 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 	@Override
 	public void success() {
 		if (actionSave == 1) {
+			progressDialog.dismiss();
 			runOnUiThread(new Runnable() {
 				@Override
 				public void run() {
@@ -146,11 +184,11 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 							.title("提示")
 							.content("保存成功")
 							.autoDismiss(true)
+							.cancelable(true)
 							.show();
 				}
 			});
 			isChange = 0;
-			progressDialog.dismiss();
 		} else {
 			finish();
 		}
@@ -203,6 +241,7 @@ public class NotePadEditActivity extends BaseActivity<UpdateNotePadPresenter> im
 						@Override
 						public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 							dialog.dismiss();
+							finish();
 						}
 					})
 					.cancelable(false)
