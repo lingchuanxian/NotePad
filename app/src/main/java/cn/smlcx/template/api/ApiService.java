@@ -20,15 +20,15 @@ import rx.Observable;
 
 public interface ApiService {
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-	@GET("notepad/getNotePad.shtml")
+	@GET("webservice/notepad/getNotePad.shtml")
 	Observable<HttpResult<PageBean<NotePad>>> getNotePad(@Query("currentPage") int currentPage);
 
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-	@POST("notepad/updateNotePad.shtml")
+	@POST("webservice/notepad/updateNotePad.shtml")
 	Observable<HttpResult> updateNotePad(@Body String data);
 
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-	@GET("appversion/getLastVersion.shtml")
+	@GET("webservice/appversion/getLastVersion.shtml")
 	Observable<HttpResult<AppVersion>> getLastVersion();
 
 	@Streaming
@@ -36,7 +36,7 @@ public interface ApiService {
 	Observable<ResponseBody> downloadFile(@Url String fileUrl);
 
 	@Headers({"Content-Type: application/json","Accept: application/json"})
-	@GET("notepad/deleteNotePad.shtml")
+	@GET("webservice/notepad/deleteNotePad.shtml")
 	Observable<HttpResult> deleteNotePad(@Query("npId") int npId);
 
 }
